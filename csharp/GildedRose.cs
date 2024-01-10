@@ -1,17 +1,32 @@
-﻿using System.Collections.Generic;
+﻿using ApprovalUtilities.Utilities;
+using System;
+using System.Collections.Generic;
+using System.Net.NetworkInformation;
 
 namespace csharp
 {
     public class GildedRose
     {
-        IList<Item> Items;
+        private readonly IList<Item> _items;
+        private readonly ItemUpdater _itemUpdater;
+
         public GildedRose(IList<Item> Items)
+            : this(Items, new ItemUpdater())
+        { }
+
+        public GildedRose(IList<Item> Items, ItemUpdater itemUpdater)
         {
-            this.Items = Items;
+            _items = Items;
+            _itemUpdater = itemUpdater;
         }
+
+        public IList<Item> Items => _items;
 
         public void UpdateQuality()
         {
+            _items.ForEach(i => _itemUpdater.UpdateQuality(i));
+            return;
+
             for (var i = 0; i < Items.Count; i++)
             {
                 if (Items[i].Name != "Aged Brie" && Items[i].Name != "Backstage passes to a TAFKAL80ETC concert")
@@ -84,6 +99,8 @@ namespace csharp
                     }
                 }
             }
+
+  
         }
     }
 }
