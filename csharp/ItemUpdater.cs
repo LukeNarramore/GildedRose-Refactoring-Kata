@@ -12,9 +12,7 @@ namespace csharp
         private const int BACKSTAGE_FIRST_DAYS_BEFORE = 10; 
         private const int BACKSTAGE_SECOND_DAYS_BEFORE = 5;
 
-        //public static readonly string[] SpecialCases = [Constants.AGED_BRIE, Constants.BACKSTAGE, Constants.SULFURAS];
-
-        public Item UpdateQuality(Item item)
+        public Item UpdateQuality(ref Item item)
         {
             switch (item.Name)
             {
@@ -28,88 +26,22 @@ namespace csharp
                 default:
                     return UpdateQualityDefault(item);
             }
-
-            //if (item.Name != Constants.AGED_BRIE && item.Name != Constants.BACKSTAGE)
-            //{
-            //    if (item.Quality > 0)
-            //    {
-            //        if (item.Name != Constants.SULFURAS)
-            //        {
-            //            item.Quality--;
-            //        }
-            //    }
-            //}
-            //else
-            //{
-            //    if (item.Quality < MAX_QUALITY)
-            //    {
-            //        item.Quality++;
-
-            //        if (item.Name == Constants.BACKSTAGE)
-            //        {
-            //            if (item.SellIn < 11)
-            //            {
-            //                if (item.Quality < MAX_QUALITY)
-            //                {
-            //                    item.Quality++;
-            //                }
-            //            }
-
-            //            if (item.SellIn < 6)
-            //            {
-            //                if (item.Quality < MAX_QUALITY)
-            //                {
-            //                    item.Quality++;
-            //                }
-            //            }
-            //        }
-            //    }
-            //}
-
-            //if (item.Name != Constants.SULFURAS)
-            //{
-            //    item.SellIn--;
-            //}
-
-            //if (item.SellIn < 0)
-            //{
-            //    if (item.Name != Constants.AGED_BRIE)
-            //    {
-            //        if (item.Name != Constants.BACKSTAGE)
-            //        {
-            //            if (item.Quality > 0)
-            //            {
-            //                if (item.Name != Constants.SULFURAS)
-            //                {
-            //                    item.Quality--;
-            //                }
-            //            }
-            //        }
-            //        else
-            //        {
-            //            item.Quality = 0;
-            //        }
-            //    }
-            //    else
-            //    {
-            //        if (item.Quality < MAX_QUALITY)
-            //        {
-            //            item.Quality++;
-            //        }
-            //    }
-            //}
-
-            //return item;
         }
-
-
+        
         private Item UpdateQualityAgedBrie(Item item)
         {
             if (item.Quality < MAX_QUALITY)
             {
                 item.Quality++;
             }
+            
             item.SellIn--;
+            
+            if (item.SellIn < 0 && item.Quality < MAX_QUALITY)
+            {
+                item.Quality++;
+            }
+
             return item;
         }
 
@@ -129,7 +61,7 @@ namespace csharp
                     item.Quality += 2;
                 }
             }
-            else
+            else if (item.SellIn > 0)
             {
                 item.Quality++;
             }
@@ -139,6 +71,11 @@ namespace csharp
             if (item.SellIn < 0)
             {
                 item.Quality = 0;
+            }
+
+            if (item.Quality > MAX_QUALITY)
+            {
+                item.Quality = MAX_QUALITY;
             }
 
             return item;
@@ -155,15 +92,14 @@ namespace csharp
             if (item.Quality > 0)
             {
                 item.Quality--;
-                
             };
+
+            item.SellIn--;
 
             if (item.SellIn < 0 && item.Quality > 0)
             {
                 item.Quality--;
             }
-
-            item.SellIn--;
 
             return item;
         }

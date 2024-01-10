@@ -53,6 +53,36 @@ namespace csharp
             Assert.That(50, Is.EqualTo(Items[0].Quality));
         }
 
+
+        [Test]
+        public void AgedBrie_UpdateQuality_Max_10()
+        {
+            IList<Item> Items = new List<Item> { new Item { Name = Constants.AGED_BRIE, SellIn = 20, Quality = 1 } };
+            GildedRose app = new GildedRose(Items);
+            for (int i = 0; i < 10; ++i)
+            {
+                app.UpdateQuality();
+            }
+            Assert.That(Constants.AGED_BRIE, Is.EqualTo(Items[0].Name));
+            Assert.That(Items[0].SellIn, Is.EqualTo(10));
+            Assert.That(Items[0].Quality, Is.EqualTo(11));
+        }
+
+        [Test]
+        public void AgedBrie_UpdateQuality_Max_30()
+        {
+            IList<Item> Items = new List<Item> { new Item { Name = Constants.AGED_BRIE, SellIn = 20, Quality = 1 } };
+            GildedRose app = new GildedRose(Items);
+            for (int i = 0; i < 30; ++i)
+            {
+                app.UpdateQuality();
+            }
+            Assert.That(Constants.AGED_BRIE, Is.EqualTo(Items[0].Name));
+            Assert.That(Items[0].SellIn, Is.EqualTo(-10));
+            Assert.That(Items[0].Quality, Is.EqualTo(41));
+        }
+
+
         [Test]
         public void BackedStage_UpdateQuality()
         {
