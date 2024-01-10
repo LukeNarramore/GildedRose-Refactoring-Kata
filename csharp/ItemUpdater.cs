@@ -22,12 +22,16 @@ namespace csharp
                     return UpdateQualityBackStage(item);
                 case Constants.SULFURAS:
                     return UpdateQualitySulfuras(item);
+
+                case Constants.CONJURED:
+                    return UpdateQualityConjured(item);
                 // Add new special cases here -->
                 default:
                     return UpdateQualityDefault(item);
             }
         }
-        
+
+
         private Item UpdateQualityAgedBrie(Item item)
         {
             if (item.Quality < MAX_QUALITY)
@@ -87,6 +91,28 @@ namespace csharp
             return item;
         }
 
+        private Item UpdateQualityConjured(Item item)
+        {
+            if (item.Quality > 0)
+            {
+                item.Quality-=2;
+            };
+
+            item.SellIn--;
+
+            if (item.SellIn < 0)
+            {
+                item.Quality-=2;
+            }
+
+            if (item.Quality < 0)
+            {
+                item.Quality = 0;
+            }
+
+            return item;
+        }
+
         private Item UpdateQualityDefault(Item item)
         {
             if (item.Quality > 0)
@@ -96,9 +122,14 @@ namespace csharp
 
             item.SellIn--;
 
-            if (item.SellIn < 0 && item.Quality > 0)
+            if (item.SellIn < 0)
             {
                 item.Quality--;
+            }
+
+            if (item.Quality < 0)
+            {
+                item.Quality = 0;
             }
 
             return item;
